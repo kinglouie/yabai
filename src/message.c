@@ -2296,13 +2296,13 @@ static void handle_domain_window(FILE *rsp, struct token domain, char *message)
                 }
             } else if (token_equals(value, ARGUMENT_WINDOW_TOGGLE_PARENT)) {
                 if (acting_window) {
-                    window_manager_toggle_window_zoom_parent(&g_window_manager, acting_window);
+                    window_manager_toggle_window_zoom_parent(&g_space_manager, &g_window_manager, acting_window);
                 } else {
                     daemon_fail(rsp, "could not locate the window to act on!\n");
                 }
             } else if (token_equals(value, ARGUMENT_WINDOW_TOGGLE_FULLSC)) {
                 if (acting_window) {
-                    window_manager_toggle_window_zoom_fullscreen(&g_window_manager, acting_window);
+                    window_manager_toggle_window_zoom_fullscreen(&g_space_manager, &g_window_manager, acting_window);
                 } else {
                     daemon_fail(rsp, "could not locate the window to act on!\n");
                 }

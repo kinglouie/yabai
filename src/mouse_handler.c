@@ -113,9 +113,9 @@ enum mouse_drop_action mouse_determine_drop_action(struct mouse_state *ms, struc
     return MOUSE_DROP_ACTION_NONE;
 }
 
-void mouse_drop_action_stack(struct window_manager *wm, struct view *src_view, struct window *src_window, struct view *dst_view, struct window *dst_window)
+void mouse_drop_action_stack(struct space_manager *sm, struct window_manager *wm, struct view *src_view, struct window *src_window, struct view *dst_view, struct window *dst_window)
 {
-    space_manager_untile_window(src_view, src_window);
+    space_manager_untile_window(sm, src_view, src_window);
     window_manager_remove_managed_window(wm, src_window->id);
 
     struct window_node *dst_node = view_find_window_node(dst_view, dst_window->id);
@@ -203,7 +203,7 @@ void mouse_drop_no_target(struct space_manager *sm, struct window_manager *wm, s
     if (src_view->sid == dst_view->sid) {
         window_node_flush(node);
     } else {
-        space_manager_untile_window(src_view, window);
+        space_manager_untile_window(sm, src_view, window);
         window_manager_remove_managed_window(wm, window->id);
         window_manager_purify_window(wm, window);
 

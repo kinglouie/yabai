@@ -134,10 +134,6 @@ void space_manager_mark_view_invalid(struct space_manager *sm,  uint64_t sid)
     struct view *view = space_manager_find_view(sm, sid);
     if (view->layout == VIEW_FLOAT) return;
 
-    view_clear_flag(view, VIEW_IS_VALID);
-}
-
-void space_manager_untile_window(struct view *view, struct window *window)
     uint32_t window_count = view_window_count(view);
     if (!space_manager_autopad_view(sm, view, window_count, false)) {
       view->left_padding = sm->left_padding;
@@ -149,7 +145,7 @@ void space_manager_untile_window(struct view *view, struct window *window)
       sm->auto_balance = false;
     }
 
-    view->is_valid = false;
+    view_clear_flag(view, VIEW_IS_VALID);
 }
 
 bool space_manager_auto_pad_untile_window(struct space_manager* sm, struct view* view, struct window* window) {
@@ -165,7 +161,7 @@ bool space_manager_auto_pad_untile_window(struct space_manager* sm, struct view*
       if (space_is_visible(view->sid)) {
           window_node_flush(node);
       } else {
-          view->is_dirty = true;
+          view_set_flag(view, VIEW_IS_DIRTY);
       }
       return true;
     }
@@ -494,7 +490,7 @@ struct view* space_manager_auto_pad_view_insertion(struct space_manager* sm, str
       if (space_is_visible(view->sid)) {
           window_node_flush(node);
       } else {
-          view->is_dirty = true;
+          view_set_flag(view, VIEW_IS_DIRTY);
       }
       return view;
     } else if (space_manager_reset_view_paddings(sm, view)) {
@@ -504,7 +500,7 @@ struct view* space_manager_auto_pad_view_insertion(struct space_manager* sm, str
         if (space_is_visible(view->sid)) {
             window_node_flush(node);
         } else {
-            view->is_dirty = true;
+            view_set_flag(view, VIEW_IS_DIRTY);
         }
         sm->auto_balance = false;
         sm->split_type = SPLIT_AUTO;

@@ -1721,7 +1721,7 @@ enum window_op_error window_manager_stack_window(struct space_manager *sm, struc
 
     struct view *b_view = window_manager_find_managed_window(wm, b);
     if (b_view) {
-        space_manager_untile_window(b_view, b);
+        space_manager_untile_window(sm, b_view, b);
         window_manager_remove_managed_window(wm, b->id);
         window_manager_purify_window(wm, b);
     } else if (window_check_flag(b, WINDOW_FLOAT)) {
@@ -1850,7 +1850,7 @@ enum window_op_error window_manager_warp_window(struct space_manager *sm, struct
             // warping between spaces that belong to the same monitor as well??
             //
 
-            space_manager_untile_window(a_view, a);
+            space_manager_untile_window(sm, a_view, a);
             window_manager_remove_managed_window(wm, a->id);
             window_manager_add_managed_window(wm, a, b_view);
             space_manager_move_window_to_space(b_view->sid, a);
@@ -2021,7 +2021,7 @@ void window_manager_send_window_to_space(struct space_manager *sm, struct window
 
     struct view *view = window_manager_find_managed_window(wm, window);
     if (view) {
-        space_manager_untile_window(view, window);
+        space_manager_untile_window(sm, view, window);
         window_manager_remove_managed_window(wm, window->id);
         window_manager_purify_window(wm, window);
     }
@@ -2108,7 +2108,7 @@ void window_manager_make_window_floating(struct space_manager *sm, struct window
     if (should_float) {
         struct view *view = window_manager_find_managed_window(wm, window);
         if (view) {
-            space_manager_untile_window(view, window);
+            space_manager_untile_window(sm, view, window);
             window_manager_remove_managed_window(wm, window->id);
             window_manager_purify_window(wm, window);
         }
@@ -2135,7 +2135,7 @@ void window_manager_make_window_sticky(struct space_manager *sm, struct window_m
         if (scripting_addition_set_sticky(window->id, true)) {
             struct view *view = window_manager_find_managed_window(wm, window);
             if (view) {
-                space_manager_untile_window(view, window);
+                space_manager_untile_window(sm, view, window);
                 window_manager_remove_managed_window(wm, window->id);
                 window_manager_purify_window(wm, window);
             }
@@ -2235,7 +2235,7 @@ void window_manager_toggle_window_native_fullscreen(struct window *window)
     window_manager_wait_for_native_fullscreen_transition(window);
 }
 
-void window_manager_toggle_window_zoom_parent(struct window_manager *wm, struct window *window)
+void window_manager_toggle_window_zoom_parent(struct space_manager *sm, struct window_manager *wm, struct window *window)
 {
     TIME_FUNCTION;
 
@@ -2269,7 +2269,7 @@ void window_manager_toggle_window_zoom_parent(struct window_manager *wm, struct 
     }
 }
 
-void window_manager_toggle_window_zoom_fullscreen(struct window_manager *wm, struct window *window)
+void window_manager_toggle_window_zoom_fullscreen(struct space_manager *sm, struct window_manager *wm, struct window *window)
 {
     TIME_FUNCTION;
 
